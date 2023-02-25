@@ -1,7 +1,54 @@
 <?php
+
+try{
+    $pdo = new PDO("mysql:host=test.local;", "root", "");
+    // Установите режим ошибки PDO в исключение
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch(PDOException $e){
+    die("Ошибка подключения. " . $e->getMessage());
+}
+
+// Создание базы данных с именем demo
+try{
+    $sql = "CREATE DATABASE demo";
+    $pdo->exec($sql);
+    echo "База данных успешно создана";
+} catch(PDOException $e){
+    die("Ошибка создания базы данных $sql. " . $e->getMessage());
+}
+
+// закрываем соединение
+unset($pdo);
+
+/* Попытка подключения к серверу MySQL. Предполагая, что вы используете MySQL сервер с настройкой по умолчанию (пользователь root без пароля) */
+try{
+    $pdo = new PDO("mysql:host=test.local;dbname=demo", "root", "");
+    // Установите режим ошибки PDO в исключение
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch(PDOException $e){
+    die("ERROR: Нет подключения. " . $e->getMessage());
+}
+
+// Попытка выполнить запрос на создание таблицы
+try{
+    $sql = "CREATE TABLE persons(
+        id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+        first_name VARCHAR(30) NOT NULL,
+        last_name VARCHAR(30) NOT NULL,
+        email VARCHAR(70) NOT NULL UNIQUE
+    )";
+    $pdo->exec($sql);
+    echo "Таблица успешно создана.";
+} catch(PDOException $e){
+    die("ERROR: Не удалось выполнить $sql. " . $e->getMessage());
+}
+
+// Закрыть соединение
+unset($pdo);
+
 /* Попытка подключения к серверу MySQL. Предполагая, что вы используете MySQL сервер с настройкой по умолчанию (пользователь root без пароля)  */
 try{
-    $pdo = new PDO("mysql:host=localhost;dbname=demo", "root", "");
+    $pdo = new PDO("mysql:host=test.local;dbname=demo", "root", "");
     // Установите режим ошибки PDO в исключение
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch(PDOException $e){
