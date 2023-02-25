@@ -1,5 +1,28 @@
 <?php
+/* Попытка подключения к серверу MySQL. Предполагая, что вы используете MySQL сервер с настройкой по умолчанию (пользователь root без пароля)  */
+try{
+    $pdo = new PDO("mysql:host=localhost;dbname=demo", "root", "");
+    // Установите режим ошибки PDO в исключение
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch(PDOException $e){
+    die("ERROR: Ошибка подключения. " . $e->getMessage());
+}
 
+// Попытка выполнения запроса вставки
+try{
+    $sql = "INSERT INTO persons (first_name, last_name, email) VALUES
+            ('John', 'Rambo', 'johnrambo@mail.com'),
+            ('Clark', 'Kent', 'clarkkent@mail.com'),
+            ('John', 'Carter', 'johncarter@mail.com'),
+            ('Harry', 'Potter', 'harrypotter@mail.com')";
+    $pdo->exec($sql);
+    echo "Записи успешно вставлены.";
+} catch(PDOException $e){
+    die("ERROR: Не удалось выполнить $sql. " . $e->getMessage());
+}
+
+// Закрыть соединение
+unset($pdo);
 class UnknownBreedException extends Exception {}
 class UnknownActionException extends Exception {}
 class UnableToHuntException extends UnknownActionException {}
@@ -127,7 +150,7 @@ Dog::$count_legs;
 $dog = $argv[0];
 $action = $argv[1];
 
-try {
+    try {
     $dog = dog_fabric($dog);
     switch ($action) {
         case 'sound':
@@ -147,4 +170,6 @@ try {
     echo "".$e->getMessage()."\n";
     die();
 }
+
+
 ?>
